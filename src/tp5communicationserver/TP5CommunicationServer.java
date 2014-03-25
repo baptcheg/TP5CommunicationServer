@@ -60,9 +60,12 @@ public class TP5CommunicationServer {
             Boolean sendPlayList = false;
             try {
                 sqlRequest.getListPlayFromDatabase();
-                for (String elem : listPlayFromDatabase) {
+                System.out.println(listPlayFromDatabase.size());
+                
+                out_socket.println(listPlayFromDatabase.size());
+               /* for (String elem : listPlayFromDatabase) {
                     out_socket.println(elem);
-                }
+                }*/
                 if(sendPlayList){
                     System.out.println("zazazazazazaazazazaz");
                 name = in_socket.readLine();
