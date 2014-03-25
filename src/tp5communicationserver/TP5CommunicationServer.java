@@ -55,26 +55,20 @@ public class TP5CommunicationServer {
 
         @Override
         public void run() {
-
-            int saisie;
-            Boolean sendPlayList = false;
             try {
-                sqlRequest.getListPlayFromDatabase();
+                sqlRequest.getListPlayFromDatabase(); //On récupère la liste des pièces de théâtres
                 System.out.println(listPlayFromDatabase.size());
-                out_socket.println(listPlayFromDatabase.size());
+                out_socket.println(listPlayFromDatabase.size()); //On envoi le nombre de pièces de théâtre différent aux clients
                 for (String elem : listPlayFromDatabase) {
-                    out_socket.println(elem);
+                    out_socket.println(elem); //On envoi ensuite la liste des pièces au client
                 }
-                if (sendPlayList) {
-                    System.out.println("zazazazazazaazazazaz");
-                    name = in_socket.readLine();
-                    firstname = in_socket.readLine();
-                    pieceName = in_socket.readLine();
-                    placeNumber = Integer.parseInt(in_socket.readLine());
-                    //System.out.println(name + " " + firstname + " " + pieceName + " " + placeNumber);
-                    //sqlRequest.getListPlayFromDatabase();
-                }
-
+                //on récupère les info entrées par le client
+                name = in_socket.readLine();
+                firstname = in_socket.readLine();
+                pieceName = in_socket.readLine();
+                placeNumber = Integer.parseInt(in_socket.readLine());
+                System.out.println("Entrées de l'utilisateur" + name + " " + firstname + " " + pieceName + " " + placeNumber);
+                sqlRequest.performActionFromClient();
             } catch (Exception e) {
                 e.printStackTrace();
             } finally {
@@ -85,7 +79,6 @@ public class TP5CommunicationServer {
                     e.printStackTrace();
                 }
             }
-
         }
     }
 }

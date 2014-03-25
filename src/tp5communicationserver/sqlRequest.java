@@ -18,27 +18,32 @@ import java.util.List;
  */
 public class sqlRequest {
 
+    //classe contenant les connexion à la bdd et l'ensemble de nos requêtes
     static Connection conn;
-    static String url = "jdbc:mysql://localhost/piecestheatre";
+    static String url = "jdbc:mysql://localhost/piecestheatre"; //fonctionne avec dpisep.isep.fr ou en localhost en 
+    //important le fichier sql joint 
 
+    //Permet de stocker la liste des noms des pièces de théâtre dans la liste du fichier TP5CommunicationServer
     public static void getListPlayFromDatabase() {
         connexionDatabase();
         getPlayName();
         disconnectDatabse();
     }
 
+    //Permet d'enregistrer la reservation récupérer du client et de la stocker dans la bdd (insertReservation)
+    //Permet aussi de mettre à jour le nombre de place restante en fonction de la réservation effectué dans la bdd
+    public static void performActionFromClient() {
+        connexionDatabase();
+        insertReservation();
+        updatePlaceNumber();
+        disconnectDatabse();
+    }
+
+    //Fonction permettant de se connecter à la bdd
     public static void connexionDatabase() {
         try {
             Class.forName("com.mysql.jdbc.Driver").newInstance();
-            String url = "jdbc:mysql://localhost/piecestheatre";
             conn = DriverManager.getConnection(url, "root", "");
-            //insertReservation();
-            //insertReservation();
-            //insertPieceExample();
-            //selectPiece();
-            //countIdReservation();
-            //System.out.println("Id de cepié: "+getIdTheaterPlay());
-            //getPlayName();
         } catch (ClassNotFoundException ex) {
             System.err.println(ex.getMessage());
         } catch (IllegalAccessException ex) {
@@ -59,18 +64,18 @@ public class sqlRequest {
     }
 
     public static void insertReservation() {
-        System.out.print("\n[Performing INSERT] ... ");
+        System.out.print("\n[Performing INSERT reservation in table chegaray_abtout_reservation] ... ");
         try {
             Statement st = conn.createStatement();
             st.executeUpdate("INSERT INTO chegaray_abtout_reservation   "
-                    + "VALUES (" + countIdReservation() + ", '" + TP5CommunicationServer.name + "', '" + TP5CommunicationServer.firstname + "', NOW(), " + TP5CommunicationServer.placeNumber + ", 1)");
+                    + "VALUES (" + countIdReservation() + ", '" + TP5CommunicationServer.name + "', '" + TP5CommunicationServer.firstname + "', NOW(), " + TP5CommunicationServer.placeNumber + ", " + getIdTheaterPlay() + ")");
         } catch (SQLException ex) {
             System.err.println(ex.getMessage());
         }
     }
 
     public static void insertReservationExample() {
-        System.out.print("\n[Performing INSERT] ... ");
+        System.out.print("\n[Performing INSERT reservationExample in table chegaray_abtout_reservation] ... ");
         try {
             Statement st = conn.createStatement();
             st.executeUpdate("INSERT INTO chegaray_abtout_reservation   "
@@ -128,7 +133,7 @@ public class sqlRequest {
 
     public static int countIdReservation() {
         int nextIdNumber = 0;
-        System.out.println("\n[OUTPUT FROM count]");
+        System.out.println("\n[OUTPUT FROM countIdReservation]");
         String query = "SELECT COUNT(*) FROM chegaray_abtout_reservation";
         try {
             Statement st = conn.createStatement();
@@ -158,6 +163,7 @@ public class sqlRequest {
         return idTheaterPlay;
     }
 
+    //Permet de stocker la liste des noms des pièces de théâtre dans la liste du fichier TP5CommunicationServer
     public static void getPlayName() {
         List<String> listPlay = new ArrayList<String>();
         System.out.println("\n[OUTPUT FROM getPlayName]");
@@ -166,36 +172,25 @@ public class sqlRequest {
             Statement st = conn.createStatement();
             ResultSet rs = st.executeQuery(query);
             while (rs.next()) {
-                //System.out.println(rs.getString("nom"));
-                //TP5CommunicationServer.listPlayFromDatabase.add(rs.getString("nom"));
-                listPlay.add(rs.getString("nom"));
+                listPlay.add(rs.getString("nom")); //on stocke chaque nom dans une liste temporaire
             }
         } catch (SQLException ex) {
             System.err.println(ex.getMessage());
         }
-        TP5CommunicationServer.listPlayFromDatabase = listPlay;
+        TP5CommunicationServer.listPlayFromDatabase = listPlay; //on stocker cette liste dans liste de TP5CommunicationServer
         System.out.println("[ENDDD]");
-
-        /*for(String elem: listPlay)
-         {
-         System.out.println (elem);
-         }*/
-        //return listPlay;
     }
 
-    public static int countPlaceNumber() {
-
-        System.out.println("\n[OUTPUT FROM count]");
-        String query = "UPDATE chegaray_abtout_piecetheatre "
-                + "SET nombrePlace= nombrePlace - TP5CommunicationServer.placeNumber WHERE nom='"+TP5CommunicationServer.pieceName+"'";
+    //permet de mettre à jour le nombre de place disponible dans une pièce en fonction du nombre de place
+    //que contient la réservation du client
+    public static void updatePlaceNumber() {
+        System.out.println("\n[OUTPUT FROM delete]");
+        String query = "UPDATE chegaray_abtout_piecetheatre SET nombrePlace=nombrePlace-" + TP5CommunicationServer.placeNumber + " WHERE nom='" + TP5CommunicationServer.pieceName + "'";
         try {
             Statement st = conn.createStatement();
-            ResultSet rs = st.executeQuery(query);
-           
-            System.out.println(TP5CommunicationServer.placeNumber);
+            st.executeUpdate(query);
         } catch (SQLException ex) {
             System.err.println(ex.getMessage());
         }
-        return 1;
     }
 }
