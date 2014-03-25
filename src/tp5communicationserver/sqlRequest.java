@@ -20,8 +20,8 @@ public class sqlRequest {
 
     static Connection conn;
     static String url = "jdbc:mysql://localhost/piecestheatre";
-    
-    public static void getListPlayFromDatabase(){
+
+    public static void getListPlayFromDatabase() {
         connexionDatabase();
         getPlayName();
         disconnectDatabse();
@@ -49,8 +49,9 @@ public class sqlRequest {
             System.err.println(ex.getMessage());
         }
     }
-    public static void disconnectDatabse(){
-        try{
+
+    public static void disconnectDatabse() {
+        try {
             conn.close();
         } catch (SQLException ex) {
             System.err.println(ex.getMessage());
@@ -143,21 +144,21 @@ public class sqlRequest {
     }
 
     public static int getIdTheaterPlay() {
-        int idTheaterPlay=0;
+        int idTheaterPlay = 0;
         System.out.println("\n[OUTPUT FROM SELECT theatre id]");
         String query = "SELECT id FROM chegaray_abtout_piecetheatre WHERE nom='" + TP5CommunicationServer.pieceName + "'";
         try {
             Statement st = conn.createStatement();
             ResultSet rs = st.executeQuery(query);
             rs.next();
-            idTheaterPlay= rs.getInt(1);
+            idTheaterPlay = rs.getInt(1);
         } catch (SQLException ex) {
             System.err.println(ex.getMessage());
         }
         return idTheaterPlay;
     }
-    
-    public static void getPlayName(){
+
+    public static void getPlayName() {
         List<String> listPlay = new ArrayList<String>();
         System.out.println("\n[OUTPUT FROM getPlayName]");
         String query = "SELECT nom FROM chegaray_abtout_piecetheatre";
@@ -174,11 +175,27 @@ public class sqlRequest {
         }
         TP5CommunicationServer.listPlayFromDatabase = listPlay;
         System.out.println("[ENDDD]");
-        
-       /*for(String elem: listPlay)
-       {
-       	 System.out.println (elem);
-       }*/
+
+        /*for(String elem: listPlay)
+         {
+         System.out.println (elem);
+         }*/
         //return listPlay;
+    }
+
+    public static int countPlaceNumber() {
+
+        System.out.println("\n[OUTPUT FROM count]");
+        String query = "UPDATE chegaray_abtout_piecetheatre "
+                + "SET nombrePlace= nombrePlace - TP5CommunicationServer.placeNumber WHERE nom='"+TP5CommunicationServer.pieceName+"'";
+        try {
+            Statement st = conn.createStatement();
+            ResultSet rs = st.executeQuery(query);
+           
+            System.out.println(TP5CommunicationServer.placeNumber);
+        } catch (SQLException ex) {
+            System.err.println(ex.getMessage());
+        }
+        return 1;
     }
 }

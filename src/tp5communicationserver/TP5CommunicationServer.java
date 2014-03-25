@@ -25,7 +25,7 @@ public class TP5CommunicationServer {
 
     public static void main(String[] args) throws IOException {
         TP5CommunicationServer server = new TP5CommunicationServer();
-        server.begin(4444);
+        server.begin(8089);
     }
 
     public void begin(int port) throws IOException {
@@ -61,19 +61,18 @@ public class TP5CommunicationServer {
             try {
                 sqlRequest.getListPlayFromDatabase();
                 System.out.println(listPlayFromDatabase.size());
-                
                 out_socket.println(listPlayFromDatabase.size());
-               /* for (String elem : listPlayFromDatabase) {
+                for (String elem : listPlayFromDatabase) {
                     out_socket.println(elem);
-                }*/
-                if(sendPlayList){
+                }
+                if (sendPlayList) {
                     System.out.println("zazazazazazaazazazaz");
-                name = in_socket.readLine();
-                firstname = in_socket.readLine();
-                pieceName = in_socket.readLine();
-                placeNumber = Integer.parseInt(in_socket.readLine());
-                //System.out.println(name + " " + firstname + " " + pieceName + " " + placeNumber);
-                //sqlRequest.getListPlayFromDatabase();
+                    name = in_socket.readLine();
+                    firstname = in_socket.readLine();
+                    pieceName = in_socket.readLine();
+                    placeNumber = Integer.parseInt(in_socket.readLine());
+                    //System.out.println(name + " " + firstname + " " + pieceName + " " + placeNumber);
+                    //sqlRequest.getListPlayFromDatabase();
                 }
 
             } catch (Exception e) {
